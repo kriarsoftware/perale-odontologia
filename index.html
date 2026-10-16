@@ -274,6 +274,96 @@ section { padding-block: 104px 112px; }
 .doc .cro { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
 @media (max-width: 900px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 420px) { .team-grid { gap: 14px; } .doc-photo span { font-size: 2.4rem; } }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.doc { position: relative; }
+/* o botão cobre o cartão inteiro: clicar na foto ou no nome abre o perfil */
+.doc-open {
+  justify-self: start; margin-top: 6px; padding: 6px 0; background: none; border: 0; cursor: pointer;
+  font: 600 0.88rem var(--font-body); color: var(--ink); letter-spacing: .01em;
+  display: inline-flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--gold-soft);
+  transition: border-color .25s var(--ease), gap .25s var(--ease);
+}
+.doc-open::before { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
+.doc-open::after { content: "→"; color: var(--gold); }
+.doc:hover .doc-open { border-color: var(--gold); gap: 12px; }
+.doc-open:focus-visible { outline: none; }
+.doc-open:focus-visible::before { outline: 3px solid var(--focus); outline-offset: 6px; }
+
+/* Perfil do dentista (janela) */
+html:has(.perfil[open]) { overflow: hidden; }
+.perfil {
+  width: min(980px, calc(100% - 32px)); max-height: calc(100dvh - 48px); padding: 0; border: 0; border-radius: 22px;
+  background: var(--bg); color: var(--ink); box-shadow: 0 40px 120px -30px rgba(10, 18, 30, .55); overflow: auto; overscroll-behavior: contain;
+}
+.perfil::backdrop { background: rgba(14, 20, 30, .55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.perfil[open] { animation: perfil-in .45s var(--ease); }
+.perfil[open]::backdrop { animation: fade-in .3s ease; }
+@keyframes perfil-in { from { opacity: 0; transform: translateY(24px) scale(.98); } }
+@keyframes perfil-up { from { opacity: 0; transform: translateY(40px); } }
+@keyframes fade-in { from { opacity: 0; } }
+.perfil-close {
+  position: sticky; top: 14px; float: right; margin: 14px 14px 0 0; z-index: 4;
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  display: grid; place-items: center; cursor: pointer; transition: transform .25s var(--ease), border-color .25s var(--ease);
+}
+.perfil-close:hover { transform: rotate(90deg); border-color: var(--ink); }
+.perfil-close svg { width: 18px; height: 18px; }
+.perfil-head { display: grid; grid-template-columns: 260px 1fr; grid-template-areas: "foto txt" "foto extra"; column-gap: 44px; row-gap: 18px; padding: 44px 40px 40px; align-content: center; }
+.perfil-foto { grid-area: foto; align-self: start; }
+.perfil-txt { grid-area: txt; align-self: end; }
+.perfil-extra { grid-area: extra; align-self: start; }
+.perfil-foto { aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: var(--accent-soft); }
+.perfil-foto img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
+.perfil-txt { display: grid; gap: 12px; justify-items: start; min-width: 0; }
+.perfil-txt h2 { font-size: var(--step-3); letter-spacing: -0.02em; }
+.perfil-txt .role { color: var(--gold); font-family: var(--font-display); font-style: italic; font-size: 1.15rem; }
+.perfil-extra { display: grid; gap: 14px; justify-items: start; }
+.perfil-extra .bio { color: var(--muted); max-width: 52ch; }
+.perfil-txt .cro { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.perfil-areas { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.perfil-areas li { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.86rem; }
+.perfil-casos { padding: 36px 40px 44px; border-top: 1px solid var(--line); background: var(--surface); }
+.perfil-casos-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 24px; }
+.perfil-casos-head h3 { font-size: var(--step-2); letter-spacing: -0.01em; }
+.perfil-casos-head p { color: var(--muted); font-size: var(--step--1); }
+.casos { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 28px 24px; }
+.caso { display: grid; gap: 12px; align-content: start; margin: 0; min-width: 0; }
+.caso figcaption { display: grid; gap: 4px; }
+.caso figcaption strong { font-family: var(--font-display); font-weight: 400; font-size: 1.15rem; }
+.caso figcaption span { color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+.caso-tag { font-size: 0.7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+@media (max-width: 760px) {
+  .perfil { width: 100%; max-width: 100%; max-height: 92dvh; margin: auto 0 0; border-radius: 22px 22px 0 0; }
+  .perfil[open] { animation-name: perfil-up; }
+  .perfil-head { grid-template-columns: 112px 1fr; grid-template-areas: "foto txt" "extra extra"; gap: 18px; padding: 24px 20px; }
+  .perfil-txt { align-self: center; }
+  .perfil-txt h2 { font-size: 1.6rem; padding-right: 40px; }
+  .perfil-casos { padding: 28px 20px calc(36px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* Comparador antes/depois: arraste ou use as setas do teclado */
+.ba { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); overflow: hidden; background: var(--accent-soft); --pos: 50%; }
+.ba > .ba-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.ba > .ba-depois { clip-path: inset(0 0 0 var(--pos)); }
+.ba-ph { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 6px; text-align: center; color: var(--muted); font-size: 0.82rem; padding: 16px; }
+.ba-ph svg { width: 34px; height: 34px; color: var(--tooth-edge); }
+.ba-ph.ba-antes { background: color-mix(in srgb, var(--accent-soft) 85%, var(--surface)); padding-right: 50%; }
+.ba-ph.ba-depois { background: color-mix(in srgb, var(--gold-soft) 38%, var(--surface)); padding-left: 50%; }
+.ba-label {
+  position: absolute; top: 10px; z-index: 2; padding: 4px 10px; border-radius: 999px; pointer-events: none;
+  background: rgba(14, 20, 30, .62); color: #fff; font-size: 0.68rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+}
+.ba-label.l { left: 10px; } .ba-label.r { right: 10px; }
+.ba-line { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; margin-left: -1px; background: #fff; z-index: 2; pointer-events: none; box-shadow: 0 0 12px rgba(0, 0, 0, .25); }
+.ba-line::after {
+  content: "‹ ›"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 38px; height: 38px; border-radius: 50%; background: #fff; color: #16202e; display: grid; place-items: center;
+  font-weight: 700; font-size: 1rem; box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+}
+.ba input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; z-index: 3; }
+.ba:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 3px; }
+.caso-foto { aspect-ratio: 4 / 3; border-radius: var(--radius-sm); overflow: hidden; background: var(--accent-soft); position: relative; }
+.caso-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Como funciona */
 #consulta { background: var(--surface); border-block: 1px solid var(--line); }
@@ -470,6 +560,7 @@ footer .social a:hover { color: var(--ink); }
             <p class="role">Implantodontista</p>
             <p class="bio">Especialista em Implantodontia e atua em harmonização orofacial. Graduado pela <span translate="no">UniVap</span>.</p>
             <p class="cro">CRO-SP&nbsp;105890</p>
+            <button type="button" class="doc-open" data-doc="leo" aria-haspopup="dialog">Ver perfil e casos<span class="sr-only"> de Dr. Léo</span></button>
           </div>
         </article>
         <article class="doc">
@@ -479,6 +570,7 @@ footer .social a:hover { color: var(--ink); }
             <p class="role">Ortodontista</p>
             <p class="bio">Especialista em Ortodontia. Graduada pela Universidade Braz Cubas.</p>
             <p class="cro">CRO-SP&nbsp;126214</p>
+            <button type="button" class="doc-open" data-doc="bruna" aria-haspopup="dialog">Ver perfil e casos<span class="sr-only"> de Dra. Bruna</span></button>
           </div>
         </article>
         <article class="doc">
@@ -488,6 +580,7 @@ footer .social a:hover { color: var(--ink); }
             <p class="role">Endodontista</p>
             <p class="bio">Atualização em Endodontia pelo Instituto Odonto Sales. Graduada pela Universidade Braz Cubas.</p>
             <p class="cro">CRO-SP&nbsp;134357</p>
+            <button type="button" class="doc-open" data-doc="elcimara" aria-haspopup="dialog">Ver perfil e casos<span class="sr-only"> de Dra. Elcimara</span></button>
           </div>
         </article>
         <article class="doc">
@@ -497,6 +590,7 @@ footer .social a:hover { color: var(--ink); }
             <p class="role">Clínica geral e estética dental</p>
             <p class="bio">Atua em clínica geral, estética dental, facetas e toxina botulínica (botox). Graduada pela Universidade Braz Cubas.</p>
             <p class="cro">CRO-SP&nbsp;177173</p>
+            <button type="button" class="doc-open" data-doc="camile" aria-haspopup="dialog">Ver perfil e casos<span class="sr-only"> de Dra. Camile</span></button>
           </div>
         </article>
       </div>
@@ -549,6 +643,35 @@ footer .social a:hover { color: var(--ink); }
     </div>
   </section>
 </main>
+
+<dialog class="perfil" id="perfil" aria-labelledby="perfil-nome">
+  <button type="button" class="perfil-close" id="perfil-close" aria-label="Fechar perfil">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="perfil-head">
+    <div class="perfil-foto"><img id="perfil-foto" src="" alt="" width="446" height="558"></div>
+    <div class="perfil-txt">
+      <h2 id="perfil-nome"></h2>
+      <p class="role" id="perfil-role"></p>
+      <p class="cro" id="perfil-cro"></p>
+    </div>
+    <div class="perfil-extra" id="perfil-extra">
+      <p class="bio" id="perfil-bio"></p>
+      <ul class="perfil-areas" id="perfil-areas" aria-label="Áreas de atuação"></ul>
+      <a class="btn btn-wa" id="perfil-wa" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7c.1.2 1.9 2.9 4.6 4 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2z"/></svg>
+        <span id="perfil-wa-txt">Agendar</span>
+      </a>
+    </div>
+  </div>
+  <section class="perfil-casos" aria-labelledby="perfil-casos-titulo">
+    <div class="perfil-casos-head">
+      <h3 id="perfil-casos-titulo">Casos</h3>
+      <p>Imagens publicadas com autorização dos pacientes.</p>
+    </div>
+    <div class="casos" id="perfil-casos"></div>
+  </section>
+</dialog>
 
 <footer>
   <div class="wrap">
@@ -680,6 +803,124 @@ document.querySelectorAll('#treat-list .treat').forEach(function (a) {
     new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; sync(); }).observe(svg);
   }
   sync();
+})();
+
+// Perfil de cada dentista com galeria de casos.
+// Para publicar um caso, coloque as imagens em fotos/casos/ e preencha "antes" e "depois"
+// (ou só "foto", para um caso com uma imagem). Sem imagem, aparece um espaço reservado.
+var PERFIS = {
+  leo: {
+    nome: 'Dr. Léo Perale Neto', curto: 'Dr. Léo', role: 'Implantodontista', cro: 'CRO-SP 105890', foto: 'fotos/leo.jpg',
+    bio: 'Especialista em Implantodontia, atua também em harmonização orofacial. Planeja cada caso para devolver a mastigação e um sorriso natural, do implante unitário ao implante zigomático. Graduado pela UniVap.',
+    areas: ['Implante unitário', 'Protocolo sobre implantes', 'Implante zigomático', 'Harmonização orofacial'],
+    casos: [
+      { tipo: 'Implantodontia', titulo: 'Implante unitário', texto: 'Reposição de um dente perdido com implante e coroa.', antes: '', depois: '' },
+      { tipo: 'Reabilitação', titulo: 'Protocolo sobre implantes', texto: 'Arcada fixa sobre implantes, devolvendo mastigação e estética.', antes: '', depois: '' },
+      { tipo: 'Harmonização', titulo: 'Harmonização orofacial', texto: 'Equilíbrio entre o sorriso e o restante do rosto.', antes: '', depois: '' }
+    ]
+  },
+  bruna: {
+    nome: 'Dra. Bruna Batista Perale', curto: 'Dra. Bruna', role: 'Ortodontista', cro: 'CRO-SP 126214', foto: 'fotos/bruna.jpg',
+    bio: 'Especialista em Ortodontia. Corrige a posição dos dentes e a mordida com aparelho fixo ou alinhadores transparentes, como Invisalign. Graduada pela Universidade Braz Cubas.',
+    areas: ['Aparelho fixo', 'Alinhadores transparentes', 'Invisalign', 'Correção da mordida'],
+    casos: [
+      { tipo: 'Alinhadores', titulo: 'Alinhadores transparentes', texto: 'Dentes alinhados sem bráquetes aparentes.', antes: '', depois: '' },
+      { tipo: 'Aparelho fixo', titulo: 'Apinhamento dentário', texto: 'Correção de dentes encavalados com aparelho fixo.', antes: '', depois: '' },
+      { tipo: 'Mordida', titulo: 'Correção da mordida', texto: 'Ajuste do encaixe entre as arcadas superior e inferior.', antes: '', depois: '' }
+    ]
+  },
+  elcimara: {
+    nome: 'Dra. Elcimara Batista Perale', curto: 'Dra. Elcimara', role: 'Endodontista', cro: 'CRO-SP 134357', foto: 'fotos/elcimara.jpg',
+    bio: 'Atualização em Endodontia pelo Instituto Odonto Sales. Faz tratamento de canal para aliviar a dor e manter o dente natural sempre que possível. Graduada pela Universidade Braz Cubas.',
+    areas: ['Tratamento de canal', 'Alívio da dor', 'Preservação do dente natural'],
+    casos: [
+      { tipo: 'Endodontia', titulo: 'Tratamento de canal', texto: 'Radiografias do dente antes e depois do tratamento.', antes: '', depois: '' },
+      { tipo: 'Endodontia', titulo: 'Dente preservado', texto: 'Canal seguido de restauração, mantendo o dente natural.', antes: '', depois: '' }
+    ]
+  },
+  camile: {
+    nome: 'Dra. Camile Rocca', curto: 'Dra. Camile', role: 'Clínica geral e estética dental', cro: 'CRO-SP 177173', foto: 'fotos/camile.jpg',
+    bio: 'Atua em clínica geral e estética dental: avaliações, restaurações, facetas e toxina botulínica (botox). Graduada pela Universidade Braz Cubas.',
+    areas: ['Clínica geral', 'Estética dental', 'Facetas', 'Botox'],
+    casos: [
+      { tipo: 'Estética', titulo: 'Facetas', texto: 'Forma e cor do sorriso redesenhadas com facetas.', antes: '', depois: '' },
+      { tipo: 'Estética', titulo: 'Restauração estética', texto: 'Restauração na cor do dente, imperceptível.', antes: '', depois: '' },
+      { tipo: 'Harmonização', titulo: 'Toxina botulínica', texto: 'Suavização de linhas de expressão com botox.', antes: '', depois: '' }
+    ]
+  }
+};
+
+(function () {
+  var dlg = document.getElementById('perfil');
+  if (!dlg || typeof dlg.showModal !== 'function') return;
+  var $ = function (id) { return document.getElementById(id); };
+  var DENTE = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 7c-3-2.5-9-3-11.5 1-2.4 3.8-.7 8 .3 11.5 1 3.6 1.4 9 3.3 12.3 1.4 2.4 3.4 1.6 3.9-.9.6-3.2 1.2-7 4-7s3.4 3.8 4 7c.5 2.5 2.5 3.3 3.9.9 1.9-3.3 2.3-8.7 3.3-12.3 1-3.5 2.7-7.7.3-11.5C28.9 4 23 4.5 20 7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function img(src, alt, cls) { var i = el('img', cls); i.src = src; i.alt = alt; i.loading = 'lazy'; i.decoding = 'async'; return i; }
+  function ph(cls, txt) { return el('div', 'ba-ph ' + cls, DENTE + '<span>' + txt + '</span>'); }
+
+  function caso(c) {
+    var fig = el('figure', 'caso');
+    if (c.foto) {
+      var box = el('div', 'caso-foto');
+      box.appendChild(img(c.foto, c.titulo));
+      fig.appendChild(box);
+    } else {
+      var ba = el('div', 'ba');
+      var temFotos = c.antes && c.depois;
+      ba.appendChild(temFotos ? img(c.antes, 'Antes: ' + c.titulo, 'ba-img ba-antes') : ph('ba-antes', 'Foto de antes'));
+      ba.appendChild(temFotos ? img(c.depois, 'Depois: ' + c.titulo, 'ba-img ba-depois') : ph('ba-depois', 'Foto de depois'));
+      ba.appendChild(el('span', 'ba-label l', 'Antes'));
+      ba.appendChild(el('span', 'ba-label r', 'Depois'));
+      ba.appendChild(el('span', 'ba-line'));
+      var r = el('input');
+      r.type = 'range'; r.min = 0; r.max = 100; r.value = 50;
+      r.setAttribute('aria-label', 'Comparar antes e depois: ' + c.titulo);
+      r.addEventListener('input', function () { ba.style.setProperty('--pos', r.value + '%'); });
+      ba.appendChild(r);
+      fig.appendChild(ba);
+    }
+    var cap = el('figcaption');
+    cap.appendChild(el('span', 'caso-tag')).textContent = c.tipo;
+    cap.appendChild(el('strong')).textContent = c.titulo;
+    cap.appendChild(el('span')).textContent = c.texto;
+    fig.appendChild(cap);
+    return fig;
+  }
+
+  function abrir(id, foco) {
+    var p = PERFIS[id];
+    if (!p) return;
+    $('perfil-foto').src = p.foto; $('perfil-foto').alt = p.nome;
+    $('perfil-nome').textContent = p.nome;
+    $('perfil-role').textContent = p.role;
+    $('perfil-cro').textContent = p.cro;
+    $('perfil-bio').textContent = p.bio;
+    var ul = $('perfil-areas'); ul.innerHTML = '';
+    p.areas.forEach(function (a) { ul.appendChild(el('li')).textContent = a; });
+    $('perfil-wa').href = 'https://wa.me/5512988096695?text=' + encodeURIComponent('Olá Perale Odontologia, gostaria de agendar uma consulta com ' + p.nome + '.');
+    $('perfil-wa-txt').textContent = 'Agendar com ' + p.curto;
+    var lista = $('perfil-casos'); lista.innerHTML = '';
+    p.casos.forEach(function (c) { lista.appendChild(caso(c)); });
+    dlg.scrollTop = 0;
+    dlg.showModal();
+    if (!foco) $('perfil-close').blur();
+    history.replaceState(null, '', '#perfil-' + id);
+  }
+
+  document.querySelectorAll('.doc-open').forEach(function (b) {
+    b.addEventListener('click', function () { abrir(b.getAttribute('data-doc'), true); });
+  });
+  $('perfil-close').addEventListener('click', function () { dlg.close(); });
+  // clicar fora da janela fecha
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('close', function () {
+    if (/^#perfil-/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+  });
+  // link direto para um perfil, ex.: site.com/#perfil-camile (bom para o Instagram)
+  var m = location.hash.match(/^#perfil-(\w+)$/);
+  if (m && PERFIS[m[1]]) abrir(m[1], false);
 })();
 </script>
 </body>

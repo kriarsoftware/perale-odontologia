@@ -1,0 +1,11 @@
+Fotos dos casos de cada dentista
+
+1. Coloque as imagens aqui, de preferência em JPG, na proporção 4:3 (ex.: 1200x900),
+   com nomes simples: camile-facetas-antes.jpg, camile-facetas-depois.jpg
+2. No index.html, procure "var PERFIS" e preencha o caso:
+   antes: 'fotos/casos/camile-facetas-antes.jpg', depois: 'fotos/casos/camile-facetas-depois.jpg'
+   Para um caso com uma foto só, use:  foto: 'fotos/casos/nome.jpg'
+3. Para adicionar ou remover casos, copie ou apague uma linha { tipo: ..., titulo: ..., ... }.
+
+Importante: só publique fotos com autorização por escrito do paciente
+e seguindo as regras de publicidade do CFO.
